@@ -13,6 +13,8 @@ class Program
     private IUiElement[] _elements =
     [
         new MainMenuBar(),
+        new DisplayWindow(),
+        new InputWindow(),
     ];
     
     private void Run()

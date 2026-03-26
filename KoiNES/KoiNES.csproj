@@ -8,10 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Emulation\" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha" />
       <PackageReference Include="Raylib-cs" Version="7.0.2" />
       <PackageReference Include="rlImgui-cs" Version="3.2.0" />
     </ItemGroup>
