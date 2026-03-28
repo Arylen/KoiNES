@@ -24,19 +24,22 @@ public class Bus(NesVM vm)
     
     public byte Read(ushort address)
     {
-        // Internal RAM is 0x800 size echoed throughout 0x0000 - 0x1FFFF
+        // Internal RAM is 0x800 size echoed throughout 0x0000 - 0x1FFF
         if (address <= 0x07FF) return _iRAM[address];
         if (address <= 0x0FFF) return _iRAM[address - 0x0800];
         if (address <= 0x17FF) return _iRAM[address - 0x1000];
         if (address <= 0x1FFF) return _iRAM[address - 0x1800];
         
-        
-        
-        return 0;
+        throw new ArgumentOutOfRangeException(nameof(address), $"OOB Read, no mapped device. (Addr=${address:X4})");
     }
 
     public void Write(ushort address, byte value)
     {
-        
+        // Internal RAM is 0x800 size echoed throughout 0x0000 - 0x1FFF
+        if (address <= 0x07FF) _iRAM[address] = value;
+        else if (address <= 0x0FFF) _iRAM[address - 0x0800] = value;
+        else if (address <= 0x17FF) _iRAM[address - 0x1000] = value;
+        else if (address <= 0x1FFF) _iRAM[address - 0x1800] = value;
+        else throw new ArgumentOutOfRangeException(nameof(address), $"OOB Write, no mapped device. (Addr=${address:X4}, Val={value:X2})");
     }
 }
