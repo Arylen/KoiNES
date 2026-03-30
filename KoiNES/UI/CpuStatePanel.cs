@@ -17,22 +17,24 @@ public class CpuStatePanel : IPanel
             ImGui.Text($"X: ${vm.CPU.X:X2}");
             ImGui.Text($"Y: ${vm.CPU.Y:X2}");
             ImGui.Separator();
-            DrawReg("N", vm.CPU.N); ImGui.SameLine();
-            DrawReg("V", vm.CPU.V); ImGui.SameLine();
+            DrawReg("N", "Negative", vm.CPU.N); ImGui.SameLine();
+            DrawReg("V", "Overflow", vm.CPU.V); ImGui.SameLine();
             ImGui.Text("-"); ImGui.SameLine();
-            DrawReg("B", vm.CPU.B); ImGui.SameLine();
-            DrawReg("D", vm.CPU.D); ImGui.SameLine();
-            DrawReg("I", vm.CPU.I); ImGui.SameLine();
-            DrawReg("Z", vm.CPU.Z); ImGui.SameLine();
-            DrawReg("C", vm.CPU.C);
+            DrawReg("B", "Break", vm.CPU.B); ImGui.SameLine();
+            DrawReg("D", "Overflow", vm.CPU.D); ImGui.SameLine();
+            DrawReg("I", "Interrupt Disable", vm.CPU.I); ImGui.SameLine();
+            DrawReg("Z", "Zero", vm.CPU.Z); ImGui.SameLine();
+            DrawReg("C", "Carry", vm.CPU.C);
         }
         
         ImGui.End();
     }
 
-    private void DrawReg(string label, bool value)
+    private void DrawReg(string label, string tooltip, bool value)
     {
         var color = value ? new Vector4(0, 1, 0, 1) : new Vector4(1, 0, 0, 1);
         ImGui.TextColored(color, label);
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip(tooltip);
     }
 }
