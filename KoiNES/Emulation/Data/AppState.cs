@@ -1,6 +1,4 @@
-using KoiNES.Emulation;
-
-namespace KoiNES.Data;
+namespace KoiNES.Emulation.Data;
 
 public static class AppState
 {

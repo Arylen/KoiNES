@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UI\" />
+      <Folder Include="Core\" />
     </ItemGroup>
 
 </Project>

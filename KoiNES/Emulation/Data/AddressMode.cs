@@ -1,4 +1,4 @@
-namespace KoiNES.Data;
+namespace KoiNES.Emulation.Data;
 
 public enum AddressMode
 {

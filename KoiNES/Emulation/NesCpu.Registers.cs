@@ -11,6 +11,14 @@ public partial class NesCpu
     public ushort PC { get; set; }
     
     public byte P { get; set; }
+    
+    public bool C { get => GetFlag(Flag.C); set => SetFlag(Flag.C, value); }
+    public bool Z { get => GetFlag(Flag.Z); set => SetFlag(Flag.Z, value); }
+    public bool I { get => GetFlag(Flag.I); set => SetFlag(Flag.I, value); }
+    public bool D { get => GetFlag(Flag.D); set => SetFlag(Flag.D, value); }
+    public bool B { get => GetFlag(Flag.B); set => SetFlag(Flag.B, value); }
+    public bool V { get => GetFlag(Flag.V); set => SetFlag(Flag.V, value); }
+    public bool N { get => GetFlag(Flag.N); set => SetFlag(Flag.N, value); }
 
     public bool GetFlag(Flag flag) => P.GetBit((int)flag);
     public void SetFlag(Flag flag, bool value) => P = P.SetBit((int)flag, value);

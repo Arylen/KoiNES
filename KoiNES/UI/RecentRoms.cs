@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace KoiNES.Data;
+namespace KoiNES.UI;
 
 public static class RecentRoms
 {

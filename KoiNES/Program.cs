@@ -1,5 +1,7 @@
 ﻿using ImGuiNET;
-using KoiNES.Data;
+using KoiNES.Emulation;
+using KoiNES.Emulation.Data;
+using KoiNES.UI;
 using Raylib_cs;
 using rlImGui_cs;
 
@@ -7,6 +9,14 @@ namespace KoiNES;
 
 class Program
 {
+    private readonly IPanel[] _panels =
+    [
+        new MainMenuPanel(),
+        new CpuStatePanel(),
+    ];
+    
+    private NesVM _nesVM = new();
+    
     static void Main(string[] args) => new Program().Run();
     
     private void Run()
@@ -24,8 +34,9 @@ class Program
 
             rlImGui.Begin();
             ImGui.DockSpaceOverViewport();
-            
-            
+
+            foreach (var panel in _panels)
+                panel.Draw(_nesVM);
                         
             rlImGui.End();
             
