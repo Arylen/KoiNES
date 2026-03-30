@@ -1,6 +1,5 @@
 ﻿using ImGuiNET;
 using KoiNES.Emulation;
-using KoiNES.Emulation.Data;
 using KoiNES.UI;
 using Raylib_cs;
 using rlImGui_cs;
@@ -13,6 +12,7 @@ class Program
     [
         new MainMenuPanel(),
         new CpuStatePanel(),
+        new MemoryViewPanel(),
     ];
     
     private NesVM _nesVM = new();
@@ -21,7 +21,7 @@ class Program
     
     private void Run()
     {
-        Raylib.InitWindow(AppState.WindowWidth, AppState.WindowHeight, "KoiNES");
+        Raylib.InitWindow(1280, 720, "KoiNES");
         Raylib.SetTargetFPS(Raylib.GetMonitorRefreshRate(Raylib.GetCurrentMonitor()));
         rlImGui.Setup();
         

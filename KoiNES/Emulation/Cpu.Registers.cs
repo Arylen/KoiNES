@@ -2,7 +2,7 @@ using KoiNES.Extensions;
 
 namespace KoiNES.Emulation;
 
-public partial class NesCpu
+public partial class Cpu
 {
     public byte A { get; set; }
     public byte X { get; set; }

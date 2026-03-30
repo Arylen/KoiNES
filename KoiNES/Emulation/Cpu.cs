@@ -1,6 +1,6 @@
 namespace KoiNES.Emulation;
 
-public partial class NesCpu
+public partial class Cpu
 {
     public void Cycle()
     {

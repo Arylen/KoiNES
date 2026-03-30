@@ -21,8 +21,8 @@ public class Bus(NesVM vm)
      *      [ ] $6000 - $7FFF  ($2000 Size)   Cartridge RAM, when present.
      *      [ ] $8000 - $FFFF  ($8000 Size)   Cartridge ROM and Mapper Registers
      */
-    
-    public byte Read(ushort address)
+
+    public byte Read(ushort address, bool throwOnError = true)
     {
         // Internal RAM is 0x800 size echoed throughout 0x0000 - 0x1FFF
         if (address <= 0x07FF) return _iRAM[address];
@@ -30,7 +30,9 @@ public class Bus(NesVM vm)
         if (address <= 0x17FF) return _iRAM[address - 0x1000];
         if (address <= 0x1FFF) return _iRAM[address - 0x1800];
         
-        throw new ArgumentOutOfRangeException(nameof(address), $"OOB Read, no mapped device. (Addr=${address:X4})");
+        if (throwOnError)
+            throw new ArgumentOutOfRangeException(nameof(address), $"OOB Read, no mapped device. (Addr=${address:X4})");
+        return 0xFF;
     }
 
     public void Write(ushort address, byte value)

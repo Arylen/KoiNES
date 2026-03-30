@@ -2,7 +2,7 @@ namespace KoiNES.Emulation;
 
 public class NesVM
 {
-    public NesCpu CPU { get; set; }
+    public Cpu CPU { get; set; }
     public Bus Bus { get; set; }
 
     public bool IsPaused { get; set; }
@@ -17,7 +17,7 @@ public class NesVM
 
     public void Reset()
     {
-        CPU = new NesCpu();
+        CPU = new Cpu();
         Bus = new Bus(this);
     }
 
