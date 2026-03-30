@@ -20,7 +20,7 @@ public partial class NesCpu
     public bool V { get => GetFlag(Flag.V); set => SetFlag(Flag.V, value); }
     public bool N { get => GetFlag(Flag.N); set => SetFlag(Flag.N, value); }
 
-    public bool GetFlag(Flag flag) => P.GetBit((int)flag);
+    public bool GetFlag(Flag flag) => flag == Flag.One || P.GetBit((int)flag);
     public void SetFlag(Flag flag, bool value) => P = P.SetBit((int)flag, value);
 
     public enum Flag
