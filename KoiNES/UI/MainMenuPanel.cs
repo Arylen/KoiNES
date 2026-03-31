@@ -23,9 +23,25 @@ public class MainMenuPanel : IPanel
         {
             if (ImGui.MenuItem("Open ROM"))
                 OpenRom(vm);
+            
+            if (ImGui.BeginMenu("Recent ROMs"))
+            {
+                if (RecentRoms.GetRecentPaths().Count == 0)
+                    ImGui.MenuItem("No Recent ROMs");
+                
+                foreach (var path in RecentRoms.GetRecentPaths())
+                {
+                    var romName = Path.GetFileNameWithoutExtension(path);
+                    if (ImGui.MenuItem(romName))
+                        OpenRomByPath(vm, path);
+                }
+                ImGui.EndMenu();
+            }
+            
             ImGui.Separator();
             if (ImGui.MenuItem("Exit"))
                 Environment.Exit(0);
+            
             ImGui.EndMenu();
         }
     }
@@ -57,7 +73,16 @@ public class MainMenuPanel : IPanel
         var result = Dialog.FileOpen("nes");
         if (!result.IsOk)
             return;
-        var data = File.ReadAllBytes(result.Path);
+        OpenRomByPath(vm, result.Path);
+    }
+
+    private void OpenRomByPath(NesVM vm, string path)
+    {
+        if (!File.Exists(path))
+            return;
+        Console.WriteLine($"Opening ROM at {path}");
+        RecentRoms.Add(path);
+        var data = File.ReadAllBytes(path);
         vm.LoadROM(data);
     }
 }
