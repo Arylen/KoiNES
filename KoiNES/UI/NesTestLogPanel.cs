@@ -36,6 +36,11 @@ public class NesTestLogPanel : IPanel
 
     private void DrawLogs(NesVM vm)
     {
+        if (ImGui.Button("Copy Logs"))
+            ImGui.SetClipboardText(string.Join('\n', _logs.Select(log => log.ToString())));
+        
+        ImGui.Separator();
+        
         if (!vm.NesTestLogMode)
         {
             ImGui.TextColored(new Vector4(1, 0, 0, 1), "VM.NesTestLogMode is set to False, and will not generate logs!");

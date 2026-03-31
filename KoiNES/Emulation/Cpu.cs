@@ -30,4 +30,15 @@ public partial class Cpu(Bus bus)
         
         CycleDebt += cycles - 1;
     }
+
+    public void PushStack(byte value) => Bus.Write((ushort)(0x100 + SP--), value);
+
+    public void PushStackWord(ushort value)
+    {
+        PushStack((byte)(value >> 8));
+        PushStack((byte)(value & 0xFF));
+    }
+
+    public byte PopStack() => Bus.Read((ushort)(0x100 + ++SP));
+    public ushort PopStackWord() => (ushort)(PopStack() | (PopStack() << 8));
 }

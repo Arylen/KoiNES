@@ -31,9 +31,6 @@ public class MemoryViewPanel : IPanel
         {
             fixed (int* ptr = &_rowOffset)
             {
-                // ImGui.AlignTextToFramePadding();
-                // ImGui.Text("Start Address:"); ImGui.SameLine();
-                
                 var buttonSize = new Vector2(30, 0);
                 var didLeftThreeMult = ImGui.Button("<<<", buttonSize); ImGui.SameLine();
                 var didLeftMult = ImGui.Button("<<", buttonSize); ImGui.SameLine();

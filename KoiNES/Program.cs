@@ -16,6 +16,7 @@ class Program
         new VMControlPanel(),
         new NesTestLogPanel(),
         new DasmPanel(),
+        new StackPanel(),
     ];
     
     private NesVM _nesVM = new();

@@ -11,14 +11,18 @@ public struct Mnemonic(Cpu cpu, byte[] data, string format)
         if (Data.Length != 3)
             Data = Data.Concat(new byte[3 - Data.Length]).ToArray();
 
-        List<(string token, string value)> replacementMap = new()
-        {
+        var instructionLength = Cpu.Instructions[Data[0]].Length;
+
+        List<(string token, string value)> replacementMap =
+        [
             ("{byte}", $"{Data[1]:X2}"),
             ("{word}", $"{Data[2]:X2}{Data[1]:X2}"),
+            ("{sbyte}", $"{(sbyte)Data[1]}"),
+            ("{sbyte_rel_pc}", $"{(ushort)(Cpu.PC + instructionLength + (sbyte)Data[1]):X4}"),
             ("{x}", $"{Cpu.X:X2}"),
-            ("{y}", $"{Cpu.X:X2}"),
-            ("{a}", $"{Cpu.X:X2}"),
-        };
+            ("{y}", $"{Cpu.Y:X2}"),
+            ("{a}", $"{Cpu.A:X2}")
+        ];
         
         var mnemonic = Format;
         
