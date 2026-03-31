@@ -8,6 +8,7 @@ public partial class Cpu(Bus bus)
     public Bus Bus { get; set; } = bus;
 
     public byte FetchNext() => Bus.Read(PC++);
+    public ushort FetchNextWord() => (ushort)(Bus.Read(PC++) | (Bus.Read(PC++) << 8));
     
     public void Cycle()
     {

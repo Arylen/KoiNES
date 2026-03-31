@@ -64,6 +64,11 @@ public class MainMenuPanel : IPanel
                     File.Delete(iniPath);
                 ImGui.SaveIniSettingsToDisk(iniPath);
             }
+
+            var nesTestLogModeVerb = vm.NesTestLogMode ? "Disable" : "Enable";
+            if (ImGui.MenuItem($"{nesTestLogModeVerb} NES Test Logs"))
+                vm.NesTestLogMode = !vm.NesTestLogMode;
+            
             ImGui.EndMenu();
         }
     }

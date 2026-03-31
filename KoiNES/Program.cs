@@ -14,6 +14,7 @@ class Program
         new CpuStatePanel(),
         new MemoryViewPanel(),
         new VMControlPanel(),
+        new NesTestLogPanel(),
     ];
     
     private NesVM _nesVM = new();
