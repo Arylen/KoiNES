@@ -15,7 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Assets\" />
       <Folder Include="Core\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\nestest.log">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

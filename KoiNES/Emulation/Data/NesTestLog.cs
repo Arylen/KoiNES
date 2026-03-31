@@ -2,30 +2,27 @@ using System.Text;
 
 namespace KoiNES.Emulation.Data;
 
-public readonly struct NesTestLog(
-    ushort address,
-    byte[] bytes,
-    string mnemonic,
-    byte regA,
-    byte regX,
-    byte regY,
-    byte regP,
-    byte regSP,
-    int ppuX,
-    int ppuY,
-    long cycles
-) {
-    public override string ToString()
-    {
+public class NesTestLog
+{
+    private readonly string _output;
+    
+    public NesTestLog(
+        Cpu cpu,
+        Ppu ppu,
+        byte[] bytes,
+        string mnemonic
+    ) {
         var builder = new StringBuilder();
 
-        builder.Append($"{address:X4}  ");
-        builder.Append(string.Join(" ", bytes.Select(b => $"{b:X2}")).PadRight(9));
+        builder.Append($"{cpu.PC:X4}  ");
+        builder.Append(string.Join(" ", bytes.Select(b => $"{b:X2}")).PadRight(10));
         builder.Append($"{mnemonic,-32}");
-        builder.Append($"A:{regA:X2} X:{regX:X2} Y:{regY:X2} P:{regP:X2} SP:{regSP:X2} ");
-        builder.Append($"PPU:{ppuX,3},{ppuY,3} ");
-        builder.Append($"CYC:{cycles}");
+        builder.Append($"A:{cpu.A:X2} X:{cpu.X:X2} Y:{cpu.Y:X2} P:{cpu.P:X2} SP:{cpu.SP:X2} ");
+        builder.Append($"PPU:{ppu.Line,3},{ppu.Dot,3} ");
+        builder.Append($"CYC:{cpu.CycleCount}");
         
-        return builder.ToString();
+        _output = builder.ToString();
     }
+    
+    public override string ToString() => _output;
 }

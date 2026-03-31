@@ -3,7 +3,7 @@ namespace KoiNES.Emulation;
 public partial class Cpu(Bus bus)
 {
     public int CycleDebt { get; set; }
-    public long CycleCount { get; set; }
+    public long CycleCount { get; set; } = 7;
 
     public Bus Bus { get; set; } = bus;
 
@@ -28,6 +28,6 @@ public partial class Cpu(Bus bus)
 
         var cycles = instruction.Handler(this);
         
-        CycleDebt += cycles;
+        CycleDebt += cycles - 1;
     }
 }

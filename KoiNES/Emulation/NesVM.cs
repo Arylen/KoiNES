@@ -6,6 +6,7 @@ namespace KoiNES.Emulation;
 public class NesVM
 {
     public Cpu CPU { get; set; }
+    public Ppu PPU { get; set; }
     public Bus Bus { get; set; }
     
     public Cartridge? Cartridge { get; set; }
@@ -32,6 +33,7 @@ public class NesVM
             P = 0x24,
             PC = Bus.ReadWord(0xFFFC)
         };
+        PPU = new Ppu();
     }
 
     public void Start()
@@ -70,8 +72,8 @@ public class NesVM
         if (NesTestLogMode && CPU.CycleDebt == 0)
             EmitNesTestLog();
         CPU.Cycle();
-        // for (var i = 0; i < 3; i++)
-        //     PPU.Cycle();    
+        for (var i = 0; i < 3; i++)
+            PPU.Cycle();
     }
 
     public void Step()
@@ -95,20 +97,13 @@ public class NesVM
             Bus.Read((ushort)(CPU.PC + 2)),
         };
         
-        var mnemonic = string.Format(instruction.Mnemonic, paddedData[1], paddedData[2]);
+        var mnemonic = new Mnemonic(CPU, paddedData, instruction.Mnemonic); 
         
         var newLog = new NesTestLog(
-            address: CPU.PC,
+            cpu: CPU,
+            ppu: PPU,
             bytes: paddedData.Take(instruction.Length).ToArray(),
-            mnemonic: mnemonic,
-            regA: CPU.A,
-            regX: CPU.X,
-            regY: CPU.Y,
-            regP: CPU.P,
-            regSP: CPU.SP,
-            ppuX: 0,
-            ppuY: 0,
-            cycles: CPU.CycleCount
+            mnemonic: mnemonic.ToString()
         );
         
         OnNesTestLog?.Invoke(newLog);

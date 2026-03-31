@@ -57,8 +57,8 @@ public class DasmPanel : IPanel
             (byte)(addressPlusTwo < ushort.MaxValue ? vm.Bus.Read((ushort)addressPlusTwo) : 0xFF),
         };
         
-        var mnemonic = string.Format(instruction.Mnemonic, paddedData[1], paddedData[2]);
+        var mnemonic = new Mnemonic(vm.CPU, paddedData, instruction.Mnemonic);
         
-        return new DasmData(address, paddedData.Take(instruction.Length).ToArray(), mnemonic);
+        return new DasmData(address, paddedData.Take(instruction.Length).ToArray(), mnemonic.ToString());
     }
 }

@@ -87,6 +87,11 @@ public class MainMenuPanel : IPanel
             return;
         Console.WriteLine($"Opening ROM at {path}");
         RecentRoms.Add(path);
+        if (path.EndsWith("nestest.nes"))
+        {
+            Console.WriteLine($"Auto-detected NES Test ROM, enabling NES Test Log Mode.");
+            vm.NesTestLogMode = true;
+        }
         var data = File.ReadAllBytes(path);
         vm.LoadROM(data);
     }
