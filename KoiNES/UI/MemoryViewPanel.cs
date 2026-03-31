@@ -91,7 +91,7 @@ public class MemoryViewPanel : IPanel
             if (i != BytesPerRow - 1)
                 ImGui.SameLine();
         }
-        for (int i = 0; i < NumRows; i++)
+        for (var i = 0; i < NumRows; i++)
             DrawRow((ushort)(_rowOffset + (i * BytesPerRow)));
         ImGui.EndChild();
     }
