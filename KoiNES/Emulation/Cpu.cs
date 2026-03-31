@@ -1,9 +1,32 @@
 namespace KoiNES.Emulation;
 
-public partial class Cpu
+public partial class Cpu(Bus bus)
 {
+    public int CycleDebt { get; set; }
+    public long CycleCount { get; set; }
+
+    public Bus Bus { get; set; } = bus;
+
+    public byte FetchNext() => Bus.Read(PC++);
+    
     public void Cycle()
     {
+        CycleCount++;
+
+        if (CycleDebt > 0)
+        {
+            CycleDebt--;
+            return;
+        }
         
+        var nextOp = FetchNext();
+        
+        var instruction = Instructions[nextOp];
+        if (instruction.IsUnimplemented)
+            throw new NotImplementedException($"Unimplemented CPU OP reached: ${nextOp:X2}");
+
+        var cycles = instruction.Handler(this);
+        
+        CycleDebt += cycles;
     }
 }

@@ -16,7 +16,6 @@
 
     <ItemGroup>
       <Folder Include="Core\" />
-      <Folder Include="Emulation\Data\" />
     </ItemGroup>
 
 </Project>

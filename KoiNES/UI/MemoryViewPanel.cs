@@ -31,8 +31,8 @@ public class MemoryViewPanel : IPanel
         {
             fixed (int* ptr = &_rowOffset)
             {
-                ImGui.AlignTextToFramePadding();
-                ImGui.Text("Start Address:"); ImGui.SameLine();
+                // ImGui.AlignTextToFramePadding();
+                // ImGui.Text("Start Address:"); ImGui.SameLine();
                 
                 var buttonSize = new Vector2(30, 0);
                 var didLeftThreeMult = ImGui.Button("<<<", buttonSize); ImGui.SameLine();
@@ -42,7 +42,26 @@ public class MemoryViewPanel : IPanel
                 ImGui.InputScalar("##startAddr", ImGuiDataType.S32, (nint)ptr, nint.Zero, nint.Zero, "%04X", ImGuiInputTextFlags.CharsHexadecimal); ImGui.SameLine();
                 var didRight = ImGui.Button(">", buttonSize); ImGui.SameLine();
                 var didRightMult = ImGui.Button(">>", buttonSize); ImGui.SameLine();
-                var didRightThreeMult = ImGui.Button(">>>", buttonSize);
+                var didRightThreeMult = ImGui.Button(">>>", buttonSize); ImGui.SameLine();
+
+                if (ImGui.Button($"PC", buttonSize))
+                    _rowOffset = vm.CPU.PC & 0xFFF0;
+
+                ImGui.SameLine();
+                if (ImGui.BeginCombo("##quickview", "", ImGuiComboFlags.NoPreview))
+                {
+                    if (ImGui.Selectable("RAM ($0000)")) _rowOffset = 0x0000;
+                    if (ImGui.Selectable("Stack ($0100)")) _rowOffset = 0x0100;
+                    if (ImGui.Selectable("PPU Regs ($2000)")) _rowOffset = 0x2000;
+                    if (ImGui.Selectable("APU/IO ($4000)")) _rowOffset = 0x4000;
+                    if (ImGui.Selectable("PRG-RAM ($6000)")) _rowOffset = 0x6000;
+                    if (ImGui.Selectable("PRG-ROM ($8000)")) _rowOffset = 0x8000;
+                    if (ImGui.Selectable("Vectors ($FFF0)")) _rowOffset = 0xFFF0;
+                    ImGui.Separator();
+                    if (ImGui.Selectable($"PC (${vm.CPU.PC:X4})")) _rowOffset = vm.CPU.PC & 0xFFF0;
+                    if (ImGui.Selectable($"SP ($01{vm.CPU.SP:X2})")) _rowOffset = 0x0100;
+                    ImGui.EndCombo();
+                }
                 
                 if (didLeftThreeMult) ChangeRowOffset(-0x100);
                 if (didLeftMult) ChangeRowOffset(-0x10);
@@ -56,6 +75,7 @@ public class MemoryViewPanel : IPanel
 
     private void DrawMemView(NesVM vm)
     {
+        var pcHighlightColor = new Vector4(1.0f, 1.0f, 0.0f, 1.0f);
         var dataGreyColor = new Vector4(0.4f, 0.4f, 0.4f, 1.0f);
         var dataWhiteColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         void DrawRow(ushort rowAddr)
@@ -65,9 +85,14 @@ public class MemoryViewPanel : IPanel
             for (var i = 0; i < BytesPerRow; i++)
             {
                 var address = (ushort)(rowAddr + i);
-                var dataAtAddress = vm.Bus.Read(address, false);
+                var dataAtAddress = vm.Bus.Read(address);
                 
-                var color = dataAtAddress == 0 ? dataGreyColor : dataWhiteColor;
+                var color = dataWhiteColor;
+                if (dataAtAddress == 0x00)
+                    color = dataGreyColor;
+                if (address == vm.CPU.PC)
+                    color = pcHighlightColor;
+                
                 ImGui.TextColored(color, $"{dataAtAddress:X2}");
                 ImGui.SameLine();
 

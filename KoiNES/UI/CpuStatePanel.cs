@@ -25,6 +25,9 @@ public class CpuStatePanel : IPanel
             DrawReg("I", "Interrupt Disable", vm.CPU.I); ImGui.SameLine();
             DrawReg("Z", "Zero", vm.CPU.Z); ImGui.SameLine();
             DrawReg("C", "Carry", vm.CPU.C);
+            ImGui.Separator();
+            ImGui.Text($"CYCLE: {vm.CPU.CycleCount}");
+            ImGui.Text($" DEBT: {vm.CPU.CycleDebt}");
         }
         
         ImGui.End();

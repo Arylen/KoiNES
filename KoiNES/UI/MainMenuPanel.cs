@@ -29,7 +29,7 @@ public class MainMenuPanel : IPanel
                 if (RecentRoms.GetRecentPaths().Count == 0)
                     ImGui.MenuItem("No Recent ROMs");
                 
-                foreach (var path in RecentRoms.GetRecentPaths())
+                foreach (var path in RecentRoms.GetRecentPaths().ToList())
                 {
                     var romName = Path.GetFileNameWithoutExtension(path);
                     if (ImGui.MenuItem(romName))
