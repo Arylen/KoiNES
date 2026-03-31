@@ -21,7 +21,7 @@ public class CpuStatePanel : IPanel
             DrawReg("V", "Overflow", vm.CPU.V); ImGui.SameLine();
             ImGui.Text("-"); ImGui.SameLine();
             DrawReg("B", "Break", vm.CPU.B); ImGui.SameLine();
-            DrawReg("D", "Overflow", vm.CPU.D); ImGui.SameLine();
+            DrawReg("D", "Decimal", vm.CPU.D); ImGui.SameLine();
             DrawReg("I", "Interrupt Disable", vm.CPU.I); ImGui.SameLine();
             DrawReg("Z", "Zero", vm.CPU.Z); ImGui.SameLine();
             DrawReg("C", "Carry", vm.CPU.C);
