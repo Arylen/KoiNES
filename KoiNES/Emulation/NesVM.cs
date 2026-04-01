@@ -97,7 +97,7 @@ public class NesVM
             Bus.Read((ushort)(CPU.PC + 2)),
         };
         
-        var mnemonic = new Mnemonic(CPU, paddedData, instruction.Mnemonic); 
+        var mnemonic = new Mnemonic(CPU, CPU.PC, paddedData, instruction.Mnemonic); 
         
         var newLog = new NesTestLog(
             cpu: CPU,
