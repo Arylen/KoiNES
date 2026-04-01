@@ -24,7 +24,12 @@ public partial class Cpu(Bus bus)
         
         var instruction = Instructions[nextOp];
         if (instruction.IsUnimplemented)
-            throw new NotImplementedException($"Unimplemented CPU OP reached: ${nextOp:X2}");
+        {
+            Console.WriteLine($"Reached unimplemented instruction ${nextOp:X2}");
+            PC -= 1;
+            CycleCount -= 1;
+            return;
+        }
 
         var cycles = instruction.Handler(this);
         
