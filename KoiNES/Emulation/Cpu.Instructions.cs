@@ -50,6 +50,67 @@ public partial class Cpu
                 cpu.PC = jumpTarget;
                 return 6;
             });
+            // Return
+            Instructions[0x60] = new Instruction(1, "RTS", cpu =>
+            {
+                var returnTarget = cpu.PopStackWord();
+                cpu.PC = (ushort)(returnTarget + 1);
+                return 6;
+            });
+        }
+        
+        // Stack
+        {
+            Instructions[0x08] = new Instruction(1, "PHP", cpu =>
+            {
+                cpu.PushStack(cpu.P.SetBit(4, true).SetBit(5, true));
+                return 3;
+            });
+
+            Instructions[0x28] = new Instruction(1, "PLP", cpu =>
+            {
+                // We're supposed to be doing something special and weird with the B flag,
+                //      but I don't quite understand how that works yet and just want to get further.
+                var value =  cpu.PopStack();
+                
+                var oldI = cpu.I;
+                var oldB = cpu.B;
+                
+                cpu.P = value;
+                
+                cpu.I = oldI;
+                cpu.B = oldB;
+                
+                cpu._iFlagDelayStepsLeft = 1;
+                cpu._iFlagDelayValue = value.IsBitSet((int)Flag.InterruptDisable);
+                
+                return 4;
+            });
+
+            Instructions[0x48] = new Instruction(1, "PHA", cpu =>
+            {
+                cpu.PushStack(cpu.A);
+                return 3;
+            });
+
+            Instructions[0x68] = new Instruction(1, "PLA", cpu =>
+            {
+                cpu.A = cpu.PopStack();
+                cpu.Z = cpu.A == 0;
+                cpu.N = cpu.A.IsBitSet(7);
+                return 4;
+            });
+        }
+        
+        // AND
+        {
+            Instructions[0x29] = new Instruction(2, "AND #${byte}", cpu =>
+            {
+                cpu.A = (byte)(cpu.A & cpu.FetchNext());
+                cpu.Z = cpu.A == 0;
+                cpu.N = cpu.A.IsBitSet(7);
+                return 2;
+            });
         }
         
         // Branches
@@ -66,10 +127,10 @@ public partial class Cpu
             Instructions[0x30] = new Instruction(2, "BMI ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(cpu.N));
             // If NOT Negative
             Instructions[0x10] = new Instruction(2, "BPL ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(!cpu.N));
-            // If Overflow
-            Instructions[0x50] = new Instruction(2, "BVS ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(cpu.V));
             // If NOT Overflow
-            Instructions[0x70] = new Instruction(2, "BVC ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(!cpu.V));
+            Instructions[0x50] = new Instruction(2, "BVC ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(!cpu.V));
+            // If Overflow
+            Instructions[0x70] = new Instruction(2, "BVS ${sbyte_rel_pc}", cpu => cpu.BranchIfFlagSignedRel(cpu.V));
         }
         
         // Immediate Loads
@@ -82,9 +143,9 @@ public partial class Cpu
         // Immediate Stores
         {
             // Zero Page
-            Instructions[0x85] = new Instruction(2, "STA ${byte} = {a}", cpu => cpu.StoreImmediateZeroPage(ref cpu.A));
-            Instructions[0x86] = new Instruction(2, "STX ${byte} = {x}", cpu => cpu.StoreImmediateZeroPage(ref cpu.X));
-            Instructions[0x84] = new Instruction(2, "STY ${byte} = {y}", cpu => cpu.StoreImmediateZeroPage(ref cpu.Y));
+            Instructions[0x85] = new Instruction(2, "STA ${byte} = {peek_byte}", cpu => cpu.StoreImmediateZeroPage(ref cpu.A));
+            Instructions[0x86] = new Instruction(2, "STX ${byte} = {peek_byte}", cpu => cpu.StoreImmediateZeroPage(ref cpu.X));
+            Instructions[0x84] = new Instruction(2, "STY ${byte} = {peek_byte}", cpu => cpu.StoreImmediateZeroPage(ref cpu.Y));
         }
         
         // NOP

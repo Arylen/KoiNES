@@ -9,6 +9,9 @@ public partial class Cpu(Bus bus)
 
     public byte FetchNext() => Bus.Read(PC++);
     public ushort FetchNextWord() => (ushort)(Bus.Read(PC++) | (Bus.Read(PC++) << 8));
+
+    private int _iFlagDelayStepsLeft = -1;
+    private bool _iFlagDelayValue;
     
     public void Cycle()
     {
@@ -19,7 +22,17 @@ public partial class Cpu(Bus bus)
             CycleDebt--;
             return;
         }
-        
+
+        if (_iFlagDelayStepsLeft == 0)
+        {
+            I = _iFlagDelayValue;
+            _iFlagDelayStepsLeft = -1;
+        }
+        else if (_iFlagDelayStepsLeft > 0)
+        {
+            _iFlagDelayStepsLeft--;
+        }
+
         var nextOp = FetchNext();
         
         var instruction = Instructions[nextOp];

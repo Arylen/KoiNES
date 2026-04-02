@@ -10,7 +10,9 @@ public partial class Cpu
     public byte SP { get; set; }
     public ushort PC { get; set; }
     
-    public byte P { get; set; }
+    public byte P { get; set; } = ((byte)0)
+        .SetBit((byte)Flag.B, false)
+        .SetBit((byte)Flag.One, true);
     
     public bool C { get => GetFlag(Flag.C); set => SetFlag(Flag.C, value); }
     public bool Z { get => GetFlag(Flag.Z); set => SetFlag(Flag.Z, value); }
