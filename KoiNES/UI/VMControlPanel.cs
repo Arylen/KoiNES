@@ -18,6 +18,17 @@ public class VMControlPanel : IPanel
                 vm.Cycle();
             if (ImGui.Button("Step", buttonSize))
                 vm.Step();
+            
+            if (ImGui.Button("Run", buttonSize))
+            {
+                vm.Start();
+                vm.IsPaused = false;
+            }
+
+            if (ImGui.Button("Pause", buttonSize))
+            {
+                vm.IsPaused = true;
+            }
         }
         ImGui.End();
     }

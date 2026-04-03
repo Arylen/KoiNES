@@ -9,6 +9,7 @@ namespace KoiNES.UI;
 public class NesTestLogPanel : IPanel
 {
     private bool _didInit;
+    private bool _pauseOnFail;
     private List<NesTestLog> _logs = new();
     private List<string> _expectedLines = new();
     
@@ -42,13 +43,13 @@ public class NesTestLogPanel : IPanel
         if (!vm.NesTestLogMode)
         {
             ImGui.TextColored(new Vector4(1, 0, 0, 1), "VM.NesTestLogMode is set to False, and will not generate logs!");
-            return;
+            // return;
         }
 
-        if (_logs.Count == 0)
+        if (vm.NesTestLogMode && _logs.Count == 0)
         {
             ImGui.TextColored(new Vector4(1, 1, 0, 1), "Waiting on logs.");
-            return;
+            // return;
         }
 
         var builder = new StringBuilder();
@@ -71,6 +72,9 @@ public class NesTestLogPanel : IPanel
             AddText(new Vector4(1, 1, 1, 1), log);
             if (!matches)
             {
+                if (_pauseOnFail)
+                    vm.IsPaused = true;
+                
                 var mismatchIdx = 0;
                 while (mismatchIdx < log.Length && mismatchIdx < expected.Length && log[mismatchIdx] == expected[mismatchIdx])
                     mismatchIdx++;
@@ -83,6 +87,8 @@ public class NesTestLogPanel : IPanel
         
         if (ImGui.Button("Copy Logs"))
             ImGui.SetClipboardText(builder.ToString());
+        ImGui.SameLine();
+        ImGui.Checkbox("Pause on Fail", ref _pauseOnFail);
         
         if (ImGui.GetScrollY() >= ImGui.GetScrollMaxY() - 20)
             ImGui.SetScrollHereY(1.0f);
